@@ -84,6 +84,10 @@ function main() {
                 newNote.setPitch(thisNote.getPitch());
                 newNote.setTimeRange(thisNote.getEnd(), durRight);
                 newNote.setLyrics("-");
+                newNote.setAttributes({
+                    "dF0Left": 0.0,
+                    "dF0Right": 0.0,
+                });
                 group.addNote(newNote);
             }
         }

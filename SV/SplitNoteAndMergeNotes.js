@@ -79,6 +79,9 @@ function main() {
                 var durLeft = position - orgOnset;
                 var durRight = orgEnd - position;
                 thisNote.setDuration(durLeft);
+                thisNote.setAttributes({
+                    "dF0Right": 0.0,
+                });
 
                 var newNote = thisNote.clone();
                 newNote.setPitch(thisNote.getPitch());
@@ -86,7 +89,6 @@ function main() {
                 newNote.setLyrics("-");
                 newNote.setAttributes({
                     "dF0Left": 0.0,
-                    "dF0Right": 0.0,
                 });
                 group.addNote(newNote);
             }

@@ -3,7 +3,7 @@ var SVM = {
 }
 
 var cell = SV.QUARTER / 32;
-var doudong = 0.4
+var doudong = 0.0
 
 function getClientInfo() {
     return {

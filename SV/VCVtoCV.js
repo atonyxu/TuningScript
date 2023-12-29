@@ -38,10 +38,11 @@ function main() {
         for (var index = 0; index < selectedNotes.length; index++) {
             var thisNote = selectedNotes[index];
             var thisLyric = thisNote.getLyrics();
-            if (thisLyric.indexOf("_") > -1) {
+            if (thisLyric.indexOf("_") > -1 || thisLyric.indexOf("R") > -1) {
                 group.removeNote(thisNote.getIndexInParent());
+                continue;
             } else if (thisLyric.length > 2 && thisLyric[1] == " ") {
-                thisNote.setLyrics(thisLyric.slice(2));
+                thisNote.setLyrics(thisLyric.slice(2).replace(/[a-zA-Z]$/, ""));
             }
         }
     } else {
@@ -49,13 +50,15 @@ function main() {
         for (var i = 0; i < groupNoteNum; i++) {
             var thisNote = group.getNote(i);
             var thisLyric = thisNote.getLyrics();
-            if (thisLyric.indexOf("_") > -1) {
-                thisNote.setLyrics("br");
+            if (thisLyric.indexOf("_") > -1 || thisLyric.indexOf("R") > -1) {
+                group.removeNote(thisNote.getIndexInParent());
+                i = i - 1;
+                groupNoteNum = groupNoteNum - 1;
+                continue;
             } else if (thisLyric.length > 2 && thisLyric[1] == " ") {
-                thisNote.setLyrics(thisLyric.slice(2));
+                thisNote.setLyrics(thisLyric.slice(2).replace(/[a-zA-Z]$/, ""));
             }
         }
     }
-
     SV.finish();
 }

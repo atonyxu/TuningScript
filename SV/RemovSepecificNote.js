@@ -22,6 +22,15 @@ function getTranslations(langCode) {
     return [];
 }
 
+var phngroup = SV.getPhonemesForGroup(SV.getMainEditor().getCurrentGroup())
+function getNotePhn(the_note) {
+    if (the_note.getPhonemes() == "") {
+        return phngroup[the_note.getIndexInParent()];
+    } else {
+        return the_note.getPhonemes();
+    }
+}
+
 function main() {
     // 获取当前组和选中内容
     var selection = SV.getMainEditor().getSelection();
@@ -43,7 +52,7 @@ function main() {
             {
                 "name": "mode", "type": "ComboBox",
                 "label": "运作模式",
-                "choices": ["歌词全匹配删除", "歌词部分匹配删除（支持正则表达式）"],
+                "choices": ["歌词全匹配删除", "歌词部分匹配删除（支持正则表达式）", "音素全匹配删除", "音素部分匹配删除（支持正则表达式）"],
                 "default": 0
             },
             {
@@ -94,14 +103,11 @@ function main() {
             var groupNoteNum = group.getNumNotes();
             for (var i = 0; i < groupNoteNum; i++) {
                 var thisNote = group.getNote(i);
-                var phn;
-                if (thisNote.getPhonemes() == "") {
-                    phn = SV.getPhonemesForGroup(SV.getMainEditor().getCurrentGroup())[thisNote.getIndexInParent()];
-                } else {
-                    phn = thisNote.getPhonemes();
-                }
+                var phn = getNotePhn(thisNote);
                 if (phn == ftext) {
-                    group.removeNote(thisNote.getIndexInParent());
+                    thisIndex = thisNote.getIndexInParent();
+                    group.removeNote(thisIndex);
+                    phngroup.splice(thisIndex, 1);
                     i = i - 1;
                     groupNoteNum = groupNoteNum - 1;
                 }
@@ -113,16 +119,13 @@ function main() {
             var groupNoteNum = group.getNumNotes();
             for (var i = 0; i < groupNoteNum; i++) {
                 var thisNote = group.getNote(i);
-                var phn;
-                if (thisNote.getPhonemes() == "") {
-                    phn = SV.getPhonemesForGroup(SV.getMainEditor().getCurrentGroup())[thisNote.getIndexInParent()];
-                } else {
-                    phn = thisNote.getPhonemes();
-                }
+                var phn = getNotePhn(thisNote);
                 var flags = "g";
                 var regex = new RegExp(ftext, flags);
                 if (regex.test(phn)) {
-                    group.removeNote(thisNote.getIndexInParent());
+                    thisIndex = thisNote.getIndexInParent();
+                    group.removeNote(thisIndex);
+                    phngroup.splice(thisIndex, 1);
                     i = i - 1;
                     groupNoteNum = groupNoteNum - 1;
                 }

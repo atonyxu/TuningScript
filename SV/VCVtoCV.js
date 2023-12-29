@@ -15,7 +15,7 @@ function getClientInfo() {
 function getTranslations(langCode) {
     if (langCode == "zh-cn") {
         return [
-            ["Japanese VCV to CV", "日语VCV转CV"],
+            ["Japanese VCV to CV", "日语VCV转CV（UST清理）"],
             [SVM.cate, "音符操作"],
         ];
     }
@@ -60,5 +60,6 @@ function main() {
             }
         }
     }
+
     SV.finish();
 }

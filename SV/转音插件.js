@@ -56,12 +56,11 @@ function main() {
             var durLeft = position - orgOnset;
             var durRight = orgEnd - position;
             thisNote.setDuration(durLeft);
-            var orgAttr = thisNote.getAttributes();
-            orgAttr.dF0Vbr = 0.0;
-            orgAttr.dF0Right = doudong;
-            thisNote.setAttributes(orgAttr);
-
             var newNote = thisNote.clone();
+            thisNote.setAttributes({
+                "dF0Vbr": 0.0,
+                "dF0Right": doudong,
+            });
             newNote.setPitch(thisNote.getPitch());
             newNote.setTimeRange(thisNote.getEnd(), durRight);
             newNote.setLyrics("-");

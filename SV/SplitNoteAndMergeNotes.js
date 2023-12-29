@@ -52,12 +52,17 @@ function main() {
         var newPitch = firstNote.getDuration() >= secondNote.getDuration() ? firstNote.getPitch() : secondNote.getPitch();
         var newLrc = firstNote.getLyrics();
         var newPhn = firstNote.getPhonemes();
+        var firstAttr = firstNote.getAttributes();
 
         group.removeNote(firstNote.getIndexInParent());
         secondNote.setLyrics(newLrc);
         secondNote.setPitch(newPitch);
         secondNote.setPhonemes(newPhn);
         secondNote.setTimeRange(newOnset, newDur);
+        secondNote.setAttributes({
+            "tF0Offset": firstAttr.tF0Offset,
+            "dF0Left": firstAttr.dF0Left,
+        });
 
     } else {
         // 拆音部分

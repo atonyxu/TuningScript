@@ -22,9 +22,10 @@ function getTranslations(langCode) {
     return [];
 }
 
+var phngroup = SV.getPhonemesForGroup(SV.getMainEditor().getCurrentGroup())
 function getNotePhn(the_note) {
     if (the_note.getPhonemes() == "") {
-        return phnGroup[the_note.getIndexInParent()];
+        return phngroup[the_note.getIndexInParent()];
     } else {
         return the_note.getPhonemes();
     }
@@ -46,7 +47,7 @@ function main() {
 
     var myForm = {
         "title": SV.T("Find And Replace"),
-        "message": SV.T("对歌词或音素进行查找&替换（仅限在一个音符组内）"),
+        "message": SV.T("对歌词&音素进行查找&替换(仅限在一个音符组内)"),
         "buttons": "OkCancel",
         "widgets": [
             {
@@ -58,7 +59,7 @@ function main() {
             {
                 "name": "mode", "type": "ComboBox",
                 "label": "运作模式",
-                "choices": ["当前处开始查找", "当前处查找并替换一个", "全部查找并替换"],
+                "choices": ["光标处开始查找", "光标处开始查找并替换一个", "全部（选择部分）查找并替换"],
                 "default": 0
             },
             {
@@ -99,11 +100,13 @@ function main() {
                     if (pipei == 0) {
                         if (thisLyric == ftext && thisNote.getEnd() > playheadBlicks) {
                             selection.selectNote(thisNote);
+                            navMain.setTimeLeft(thisNote.getOnset() - 200000000);
                             return;
                         }
                     } else {
                         if (thisLyric.indexOf(ftext) > -1 && thisNote.getEnd() > playheadBlicks) {
                             selection.selectNote(thisNote);
+                            navMain.setTimeLeft(thisNote.getOnset() - 200000000);
                             return;
                         }
                     }
@@ -111,11 +114,13 @@ function main() {
                     if (pipei == 0) {
                         if (thisPhn == ftext && thisNote.getEnd() > playheadBlicks) {
                             selection.selectNote(thisNote);
+                            navMain.setTimeLeft(thisNote.getOnset() - 200000000);
                             return;
                         }
                     } else {
                         if (thisPhn.indexOf(ftext) > -1 && thisNote.getEnd() > playheadBlicks) {
                             selection.selectNote(thisNote);
+                            navMain.setTimeLeft(thisNote.getOnset() - 200000000);
                             return;
                         }
                     }
@@ -123,6 +128,117 @@ function main() {
 
             }
             return;
+        }
+
+        if (mode == 1) {
+            var groupNoteNum = group.getNumNotes();
+            for (var i = 0; i < groupNoteNum; i++) {
+                var thisNote = group.getNote(i);
+                var thisLyric = thisNote.getLyrics();
+                var thisPhn = getNotePhn(thisNote);
+                if (target == 0) {
+                    if (pipei == 0) {
+                        if (thisLyric == ftext && thisNote.getEnd() > playheadBlicks) {
+                            selection.selectNote(thisNote);
+                            thisNote.setLyrics(rtext);
+                            navMain.setTimeLeft(thisNote.getOnset() - 200000000);
+                            return;
+                        }
+                    } else {
+                        if (thisLyric.indexOf(ftext) > -1 && thisNote.getEnd() > playheadBlicks) {
+                            selection.selectNote(thisNote);
+                            thisNote.setLyrics(thisLyric.replace(ftext, rtext));
+                            navMain.setTimeLeft(thisNote.getOnset() - 200000000);
+                            return;
+                        }
+                    }
+                } else {
+                    if (pipei == 0) {
+                        if (thisPhn == ftext && thisNote.getEnd() > playheadBlicks) {
+                            selection.selectNote(thisNote);
+                            thisNote.setPhonemes(rtext);
+                            navMain.setTimeLeft(thisNote.getOnset() - 200000000);
+                            return;
+                        }
+                    } else {
+                        if (thisPhn.indexOf(ftext) > -1 && thisNote.getEnd() > playheadBlicks) {
+                            selection.selectNote(thisNote);
+                            thisNote.setPhonemes(thisPhn.replace(ftext, rtext));
+                            navMain.setTimeLeft(thisNote.getOnset() - 200000000);
+                            return;
+                        }
+                    }
+                }
+
+            }
+            return;
+        }
+
+        if (mode == 2) {
+            if (selectedNotes.length > 0) {
+                for (var index = 0; index < selectedNotes.length; index++) {
+                    var thisNote = selectedNotes[index];
+                    var thisLyric = thisNote.getLyrics();
+                    var thisPhn = getNotePhn(thisNote);
+                    if (target == 0) {
+                        if (pipei == 0) {
+                            if (thisLyric == ftext && thisNote.getEnd() > playheadBlicks) {
+                                thisNote.setLyrics(rtext);
+                                continue;
+                            }
+                        } else {
+                            if (thisLyric.indexOf(ftext) > -1 && thisNote.getEnd() > playheadBlicks) {
+                                thisNote.setLyrics(thisLyric.replace(ftext, rtext));
+                                continue;
+                            }
+                        }
+                    } else {
+                        if (pipei == 0) {
+                            if (thisPhn == ftext && thisNote.getEnd() > playheadBlicks) {
+                                thisNote.setPhonemes(rtext);
+                                continue;
+                            }
+                        } else {
+                            if (thisPhn.indexOf(ftext) > -1 && thisNote.getEnd() > playheadBlicks) {
+                                thisNote.setPhonemes(thisPhn.replace(ftext, rtext));
+                                continue;
+                            }
+                        }
+                    }
+                }
+            } else {
+                var groupNoteNum = group.getNumNotes();
+                for (var i = 0; i < groupNoteNum; i++) {
+                    var thisNote = group.getNote(i);
+                    var thisLyric = thisNote.getLyrics();
+                    var thisPhn = getNotePhn(thisNote);
+                    if (target == 0) {
+                        if (pipei == 0) {
+                            if (thisLyric == ftext && thisNote.getEnd() > playheadBlicks) {
+                                thisNote.setLyrics(rtext);
+                                continue;
+                            }
+                        } else {
+                            if (thisLyric.indexOf(ftext) > -1 && thisNote.getEnd() > playheadBlicks) {
+                                thisNote.setLyrics(thisLyric.replace(ftext, rtext));
+                                continue;
+                            }
+                        }
+                    } else {
+                        if (pipei == 0) {
+                            if (thisPhn == ftext && thisNote.getEnd() > playheadBlicks) {
+                                thisNote.setPhonemes(rtext);
+                                continue;
+                            }
+                        } else {
+                            if (thisPhn.indexOf(ftext) > -1 && thisNote.getEnd() > playheadBlicks) {
+                                thisNote.setPhonemes(thisPhn.replace(ftext, rtext));
+                                continue;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     SV.finish();

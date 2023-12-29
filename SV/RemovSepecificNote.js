@@ -41,23 +41,14 @@ function main() {
         "buttons": "OkCancel",
         "widgets": [
             {
-                "name": "lrc1", "type": "TextBox",
-                "label": SV.T("歌词全匹配删除"),
-                "default": ""
+                "name": "mode", "type": "ComboBox",
+                "label": "运作模式",
+                "choices": ["歌词全匹配删除", "歌词部分匹配删除（支持正则表达式）", "音素全匹配删除", "音素部分匹配删除（支持正则表达式）"],
+                "default": 0
             },
             {
-                "name": "lrc2", "type": "TextBox",
-                "label": SV.T("歌词部分匹配删除（支持正则表达式）"),
-                "default": ""
-            },
-            {
-                "name": "phn1", "type": "TextBox",
-                "label": SV.T("音素全匹配删除"),
-                "default": ""
-            },
-            {
-                "name": "phn2", "type": "TextBox",
-                "label": SV.T("音素部分匹配删除（支持正则表达式）"),
+                "name": "ftext", "type": "TextBox",
+                "label": SV.T("匹配文本"),
                 "default": ""
             }
         ]
@@ -66,30 +57,28 @@ function main() {
     var res = SV.showCustomDialog(myForm);
     if (res.status) {
         var result = res.answers;
-        var lrc1 = result.lrc1;
-        var lrc2 = result.lrc2;
-        var phn1 = result.phn1;
-        var phn2 = result.phn2;
+        var mode = result.mode;
+        var ftext = result.ftext;
 
-        if (lrc1 != "") {
+        if (mode == 0) {
             var groupNoteNum = group.getNumNotes();
             for (var i = 0; i < groupNoteNum; i++) {
                 var thisNote = group.getNote(i);
                 var thisLyric = thisNote.getLyrics();
-                if (thisLyric == lrc1) {
+                if (thisLyric == ftext) {
                     group.removeNote(thisNote.getIndexInParent());
                 }
             }
             return;
         }
 
-        if (lrc2 != "") {
+        if (mode == 1) {
             var groupNoteNum = group.getNumNotes();
             for (var i = 0; i < groupNoteNum; i++) {
                 var thisNote = group.getNote(i);
                 var thisLyric = thisNote.getLyrics();
                 var flags = "g";
-                var regex = new RegExp(lrc2, flags);
+                var regex = new RegExp(ftext, flags);
                 if (regex.test(thisLyric)) {
                     group.removeNote(thisNote.getIndexInParent());
                 }
@@ -97,7 +86,7 @@ function main() {
             return;
         }
 
-        if (phn1 != "") {
+        if (mode == 2) {
             var groupNoteNum = group.getNumNotes();
             for (var i = 0; i < groupNoteNum; i++) {
                 var thisNote = group.getNote(i);
@@ -107,14 +96,14 @@ function main() {
                 } else {
                     phn = thisNote.getPhonemes();
                 }
-                if (phn == phn1) {
+                if (phn == ftext) {
                     group.removeNote(thisNote.getIndexInParent());
                 }
             }
             return;
         }
 
-        if (phn2 != "") {
+        if (mode == 3) {
             var groupNoteNum = group.getNumNotes();
             for (var i = 0; i < groupNoteNum; i++) {
                 var thisNote = group.getNote(i);
@@ -125,7 +114,7 @@ function main() {
                     phn = thisNote.getPhonemes();
                 }
                 var flags = "g";
-                var regex = new RegExp(phn2, flags);
+                var regex = new RegExp(ftext, flags);
                 if (regex.test(phn)) {
                     group.removeNote(thisNote.getIndexInParent());
                 }

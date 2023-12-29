@@ -28,7 +28,7 @@ function main() {
     var selectedNotes = selection.getSelectedNotes();
     var scope = SV.getMainEditor().getCurrentGroup();
     var group = scope.getTarget();
-    var phnGroup = SV.getPhonemesForGroup(scope);
+    var phnGroup = SV.getPhonemesForGroup(SV.getMainEditor().getCurrentGroup());
 
     // 获取光标
     var playhead = SV.getPlayback().getPlayhead();
@@ -43,7 +43,7 @@ function main() {
             {
                 "name": "mode", "type": "ComboBox",
                 "label": "运作模式",
-                "choices": ["歌词全匹配删除", "歌词部分匹配删除（支持正则表达式）", "音素全匹配删除", "音素部分匹配删除（支持正则表达式）"],
+                "choices": ["歌词全匹配删除", "歌词部分匹配删除（支持正则表达式）"],
                 "default": 0
             },
             {
@@ -67,6 +67,8 @@ function main() {
                 var thisLyric = thisNote.getLyrics();
                 if (thisLyric == ftext) {
                     group.removeNote(thisNote.getIndexInParent());
+                    i = i - 1;
+                    groupNoteNum = groupNoteNum - 1;
                 }
             }
             return;
@@ -81,6 +83,8 @@ function main() {
                 var regex = new RegExp(ftext, flags);
                 if (regex.test(thisLyric)) {
                     group.removeNote(thisNote.getIndexInParent());
+                    i = i - 1;
+                    groupNoteNum = groupNoteNum - 1;
                 }
             }
             return;
@@ -92,12 +96,14 @@ function main() {
                 var thisNote = group.getNote(i);
                 var phn;
                 if (thisNote.getPhonemes() == "") {
-                    phn = phnGroup[thisNote.getIndexInParent()];
+                    phn = SV.getPhonemesForGroup(SV.getMainEditor().getCurrentGroup())[thisNote.getIndexInParent()];
                 } else {
                     phn = thisNote.getPhonemes();
                 }
                 if (phn == ftext) {
                     group.removeNote(thisNote.getIndexInParent());
+                    i = i - 1;
+                    groupNoteNum = groupNoteNum - 1;
                 }
             }
             return;
@@ -109,7 +115,7 @@ function main() {
                 var thisNote = group.getNote(i);
                 var phn;
                 if (thisNote.getPhonemes() == "") {
-                    phn = phnGroup[thisNote.getIndexInParent()];
+                    phn = SV.getPhonemesForGroup(SV.getMainEditor().getCurrentGroup())[thisNote.getIndexInParent()];
                 } else {
                     phn = thisNote.getPhonemes();
                 }
@@ -117,6 +123,8 @@ function main() {
                 var regex = new RegExp(ftext, flags);
                 if (regex.test(phn)) {
                     group.removeNote(thisNote.getIndexInParent());
+                    i = i - 1;
+                    groupNoteNum = groupNoteNum - 1;
                 }
             }
             return;

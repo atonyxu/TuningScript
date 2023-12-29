@@ -37,7 +37,7 @@ function main() {
 
     var myForm = {
         "title": SV.T("Remove Sepecific Note"),
-        "message": SV.T("匹配特定的歌词或者音素来删除音符"),
+        "message": SV.T("匹配特定的歌词来删除音符"),
         "buttons": "OkCancel",
         "widgets": [
             {

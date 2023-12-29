@@ -89,6 +89,7 @@ function main() {
                 newNote.setLyrics("-");
                 newNote.setAttributes({
                     "dF0Left": 0.0,
+                    "tF0Offset": 0.0,
                 });
                 group.addNote(newNote);
             }

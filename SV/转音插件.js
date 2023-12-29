@@ -66,6 +66,7 @@ function main() {
             newNote.setLyrics("-");
             newNote.setAttributes({
                 "dF0Left": doudong,
+                "tF0Offset": 0.0,
             });
 
             if (durLeft <= durRight) {
